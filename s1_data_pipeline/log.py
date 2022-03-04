@@ -12,7 +12,7 @@ def setup_custom_logger() -> logging.Logger:
     Returns:
         The logger to be used in the script.
     """
-    logging.basicConfig(filename=os.getcwd() + '\\output.log',
+    logging.basicConfig(filename=os.getcwd() + '/output.log',
                             filemode='a',
                             format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                             datefmt='%H:%M:%S',
@@ -36,7 +36,7 @@ def get_logger() -> logging.Logger:
         
     # no existing loggers made
     else:
-        logging.basicConfig(filename=os.getcwd() + '\\output.log',
+        logging.basicConfig(filename=os.getcwd() + '/output.log',
                                 filemode='a',
                                 format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                                 datefmt='%H:%M:%S',

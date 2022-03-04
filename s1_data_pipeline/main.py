@@ -59,7 +59,7 @@ def process_csv(name: str):
         name (str): The name of the CSV file to process.
     """
     # load the CSV
-    dataset_df = utils.get_csv(os.getcwd() + '\\data\\' + name)
+    dataset_df = utils.get_csv(os.getcwd() + '/data/' + name)
     if dataset_df is None:
         log.warning('Unable to find and process file: ' + name)
         return
@@ -81,7 +81,7 @@ def process_csv(name: str):
 
     # save the new CSV file
     processed_filename = name.replace('.csv', '_processed.csv')
-    processed_dir = os.getcwd() + '\\data'
+    processed_dir = os.getcwd() + '/data'
     processed_columns = ['first_name', 'last_name', 'price', 'above_100']
 
     if utils.generate_csv(processed_dir, processed_filename, processed_data, processed_columns):
