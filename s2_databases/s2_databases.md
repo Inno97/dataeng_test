@@ -18,53 +18,37 @@ Each sale transaction contains the following information:
 - Salesperson
 - Characteristics of car sold
 
-Set up a PostgreSQL database using the base `docker` image [here](https://hub.docker.com/_/postgres) 
-given the above. We expect at least a `Dockerfile` which will stand up your database with the DDL 
-statements to create the necessary tables. Produce entity-relationship diagrams as necessary to 
-illustrate your design.
+Set up a PostgreSQL database using the base `docker` image [here](https://hub.docker.com/_/postgres) given the above. We expect at least a `Dockerfile` which will stand up your database with the DDL statements to create the necessary tables. Produce entity-relationship diagrams as necessary to illustrate your design.
 
-Your team also needs you to query some information from the database that you have designed. 
-You are tasked to write a `sql` statement for each of the following task:
+Your team also needs you to query some information from the database that you have designed. You are tasked to write a `sql` statement for each of the following task:
 
 1) I want to know the list of our customers and their spending.
 
-2) I want to find out the top 3 car manufacturers that customers bought by sales (quantity) and 
-the sales number for it in the current month.
-
-# Obtaining the DockerFile
-
-Download the dockerfile from:
-
-> https://drive.google.com/file/d/1VV5JZ8-P2IA1DYBf_QL14ej7KZLZnXhT/view?usp=sharing
-
-Unfortunately, the dockerfile was too big to push to git, so I uploaded it to drive due to lack of 
-time.
-
-The size is likely due to other installations in the docker image, and the size could be reduced by 
-removing unused packages.
-
-I've read online that something like https://github.com/jwilder/docker-squash might work to reduce 
-the size, but I would need time to test this out.
+2) I want to find out the top 3 car manufacturers that customers bought by sales (quantity) and the sales number for it in the current month.
 
 # Running the DockerFile
 
-Load up the dockerfile:
+Build the image from the Dockerfile:
 
-> docker import dockerfile
+> docker build ~/dataeng_test/s2_databases
 
 Find the docker container ID:
 
 > docker ps
 
-Run the docker container in bash (example container ID: c2caa90ed577):
+Run the docker container in detached mode (example container ID: c2caa90ed577)
 
-> docker exec -it <container ID> bash
+> docker run -d -p 8000:8000 <container ID>
+
+Load the data into the postgres db:
+
+> docker exec -it <container ID> psql postgres postgres -f /opt/sql/init.sql
 
 Run the queries:
 
 1. I want to know the list of our customers and their spending.
 
-> psql postgres postgres -f /opt/sql/query1.sql
+> docker exec -it <container ID> psql postgres postgres -f /opt/sql/query1.sql
 
 Expected output:
 >  name  | spending \
@@ -75,7 +59,7 @@ Expected output:
  Harry  |   220000\
 (4 rows)
 
-2. 2) I want to find out the top 3 car manufacturers that customers bought by sales 
+2. I want to find out the top 3 car manufacturers that customers bought by sales 
 (quantity) and the sales number for it in the current month.
 
 query2.sql fetches for the month of 2022 Jan. This is done as the transactions are
@@ -84,7 +68,8 @@ fixed in dates, so the current month doesn't apply here.
 query3.sql will fetch for the current month. But the transactions are not made for
 this month, so nothing will be printed.
 
-> psql postgres postgres -f /opt/sql/query2.sql
+> docker exec -it <container ID> psql postgres postgres -f /opt/sql/query2.sql\
+> docker exec -it <container ID> psql postgres postgres -f /opt/sql/query3.sql
 
 Expected output:
 
@@ -96,10 +81,7 @@ Expected output:
 (3 rows)
 
 Explanation: There are 3 cars sold from Lancia but are sold in another month, so
-it does not appear here (for the month of 2022 Jan).
-
-Alternatively, you can try to run this if you don't want to use the docker container:
-> docker exec -it <container ID> psql postgres postgres -f /opt/sql/init.sql
+it does not appear here (for the month of 2022 Mar).
 
 Using sudo may be necessary (it is on my linux machine).
 
